@@ -4,33 +4,27 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import configs as conf
-import chromer_driver_configs as chronfigs
+import chrome_driver_configs as chronfigs
 
 
 class GmailBulk :
     
     
-        def __init__(self, base_url):
+        def __init__(self, base_url, driver):
             
             self.base_url = base_url
+            self.driver = driver
             
-            options = chronfigs.get_chrome_driver_options()
-            chronfigs.set_ignore_certificate_error(options)
-            chronfigs.set_incognito_mode(options)
-            
-            driver = chronfigs.get_chrome_driver()
-            
-            
+        
     
         def open_gmail_signup(self):
             
             # Open Gmail Signup Page 
-            self.driver.get(chronfigs.BASE_URL)
+            self.driver.get(conf.BASE_URL)
             time.sleep(2)
             
             
-            
-    
+        
         def signup_page_1(self):
             
             first_name = self.driver.find_element_by_xpath('//*[@id="firstName"]')
@@ -57,6 +51,8 @@ class GmailBulk :
         def signup_page_2(self):
             
     
+            time.sleep(2)
+            
             phone_number = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[1]/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div[2]/div/div[2]/div[1]/div/div[1]/input')
             phone_number.send_keys(conf.PHONE)
             
@@ -75,6 +71,7 @@ class GmailBulk :
         def signup_page_3(self):
             
     
+            time.sleep(2)
             month = self.driver.find_element_by_xpath('//*[@id="month"]')
             month.send_keys("j")
             
@@ -88,15 +85,17 @@ class GmailBulk :
             gender = self.driver.find_element_by_xpath('//*[@id="gender"]/option[3]')
             gender.click()
 
-            time.sleep(1)
+            time.sleep(2)
             
             next_button_4 = self.driver.find_element_by_xpath('//*[@id="view_container"]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]')
             next_button_4.click()
             
-            next_button_3 = self.driver.find_element_by_xpath('//*[@id="view_container"]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]')
-            next_button_3.click()
             
-            skip_button = self.driver.find_element_by_xpath('//*[@id="view_container"]/div/div/div[2]/div/div[2]/div[2]/div[2]/div/div/button/div[2]')
+            
+            time.sleep(3)
+            
+           
+            skip_button = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[1]/div[2]/div/div/div[2]/div/div[2]/div[2]/div[2]/div/div/button/div[2]')
             skip_button.click()
             
             time.sleep(2)
@@ -110,12 +109,14 @@ class GmailBulk :
             
             
             
-         def run(self):
+        def run(self):
             
             self.open_gmail_signup()
             self.signup_page_1()
             self.signup_page_2()
             self.signup_page_3()
+            
+            time.sleep(2)
             
             self.driver.quit()
                                                 
@@ -126,5 +127,11 @@ class GmailBulk :
 if __name__ == "__main__":
     
     print("Initialising")
-    gmail_bulk = GmailBulk(conf.BASE_URL)
-    GmailBulk.run()
+    options = chronfigs.get_chromdriver_options()
+    chronfigs.set_ignore_certificate_error(options)
+    chronfigs.set_incognito_mode(options)
+            
+    driver = chronfigs.get_chrome_driver(options)
+    gmail_bulk = GmailBulk(conf.BASE_URL, driver)
+    gmail_bulk.run()
+    print("Done")
